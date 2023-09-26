@@ -25,6 +25,16 @@ RSpec.describe Item do
       item = Item.new('Chalkware Piggy Bank')
       expect(item.bids).to eq({})
     end
+    it 'is created with a boolean that determines whether bidding for the item has closed' do
+      expect(@item1.closed).to eq(false)
+    end
+  end
+
+  describe '#close_bidding' do
+    it 'can close bidding for an item' do
+      @item1.close_bidding
+      expect(@item1.closed).to eq(true)
+    end
   end
 
   describe '#add_bid' do

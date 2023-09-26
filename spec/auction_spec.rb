@@ -1,3 +1,4 @@
+require 'date'
 require './lib/item'
 require './lib/attendee'
 require './lib/auction'
@@ -31,6 +32,11 @@ RSpec.describe Auction do
       auction1 = Auction.new
       expect(auction1.items).to eq([])
     end
+    it 'is created with the date is instantiated' do
+      mock_date = double("date")
+      allow(mock_date).to receive(:date).and_return('09/25/2023')
+    end
+
   end
 
   describe '#add_item' do 
@@ -48,7 +54,6 @@ RSpec.describe Auction do
   describe '#unpopular_items' do
     it 'returns a list of items that have no bids' do
       expect(@auction.unpopular_items).to eq([@item2, @item3, @item5])
-
       @item3.add_bid(@attendee2, 15)
 
       expect(@auction.unpopular_items).to eq([@item2, @item5])
@@ -58,8 +63,19 @@ RSpec.describe Auction do
   describe '#potential_revenue' do 
     it 'calculates the CURRENT potential revenue of items at auction (that currently have a bid)' do
       @item3.add_bid(@attendee2, 15)
-      
       expect(@auction.potential_revenue).to eq(87)
+    end
+  end
+  
+  describe '#bidders' do
+    it 'returns a list of bidders' do 
+      expect(@auction.bidders).to eq(['Bob', 'Megan', 'Mike'])
+    end
+  end
+
+  describe '#bidder_info' do 
+    it 'returns a hash with attendees and their respective budgets and items on which they have currently bid' do
+      expect(@auction.bidder_info).to eq({@attendee2 => {budget: '$75', items: @item1}, @attendee1 => {budget: '$50', items: @item1}, @attendee3 => {budget: '$100', items: @item4}})
     end
   end
 end 
